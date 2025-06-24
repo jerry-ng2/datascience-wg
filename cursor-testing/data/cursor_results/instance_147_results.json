@@ -1,0 +1,16 @@
+{
+  "instance_id": "pallets__flask-4045",
+  "instance_idx": 147,
+  "repo": "pallets/flask",
+  "status": "completed",
+  "cursor_response": "",
+  "files_modified": [
+    "src/flask/blueprints.py",
+    "tests/test_blueprints.py"
+  ],
+  "git_diff": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\nindex 5fb84d86..2f441762 100644\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -181,6 +181,11 @@ class Blueprint(Scaffold):\n         root_path: t.Optional[str] = None,\n         cli_group: t.Optional[str] = _sentinel,  # type: ignore\n     ):\n+        # Validate blueprint name doesn't contain dots since dots are used as\n+        # separators in the blueprint namespace for nested blueprints and endpoints\n+        if \".\" in name:\n+            raise ValueError(\"Blueprint names should not contain dots\")\n+        \n         super().__init__(\n             import_name=import_name,\n             static_folder=static_folder,\ndiff --git a/tests/test_blueprints.py b/tests/test_blueprints.py\nindex b986ca02..a76a2ae0 100644\n--- a/tests/test_blueprints.py\n+++ b/tests/test_blueprints.py\n@@ -899,3 +899,32 @@ def test_nested_blueprint(app, client):\n     assert client.get(\"/parent/no\").data == b\"Parent no\"\n     assert client.get(\"/parent/child/no\").data == b\"Parent no\"\n     assert client.get(\"/parent/child/grandchild/no\").data == b\"Grandchild no\"\n+\n+\n+def test_blueprint_name_with_dots_raises_error():\n+    \"\"\"Test that creating a blueprint with dots in the name raises ValueError.\n+    \n+    This test ensures that blueprint names cannot contain dots since dots are\n+    used as separators in the blueprint namespace for nested blueprints and endpoints.\n+    \"\"\"\n+    import pytest\n+    import flask\n+    \n+    # Test that creating a blueprint with a dot raises ValueError\n+    with pytest.raises(ValueError, match=\"Blueprint names should not contain dots\"):\n+        flask.Blueprint(\"auth.admin\", __name__)\n+    \n+    # Test that creating a blueprint with multiple dots raises ValueError\n+    with pytest.raises(ValueError, match=\"Blueprint names should not contain dots\"):\n+        flask.Blueprint(\"auth.admin.users\", __name__)\n+    \n+    # Test that valid names (without dots) work fine\n+    bp = flask.Blueprint(\"auth_admin\", __name__)\n+    assert bp.name == \"auth_admin\"\n+    \n+    # Test that other special characters are allowed (for now)\n+    bp2 = flask.Blueprint(\"auth-admin\", __name__)\n+    assert bp2.name == \"auth-admin\"\n+    \n+    bp3 = flask.Blueprint(\"auth_admin_123\", __name__)\n+    assert bp3.name == \"auth_admin_123\"\n",
+  "notes": "",
+  "time_spent_minutes": 12,
+  "difficulty_rating": "easy",
+  "success_rating": "success"
+}

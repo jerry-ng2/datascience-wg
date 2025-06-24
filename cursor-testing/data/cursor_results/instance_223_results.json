@@ -1,0 +1,17 @@
+{
+  "instance_id": "sympy__sympy-11400",
+  "instance_idx": 223,
+  "repo": "sympy/sympy",
+  "status": "completed",
+  "cursor_response": "",
+  "files_modified": [
+    "sympy/core/basic.py",
+    "sympy/plotting/plot.py",
+    "sympy/printing/ccode.py"
+  ],
+  "git_diff": "diff --git a/sympy/core/basic.py b/sympy/core/basic.py\nindex 005b8f8499..16799daa3c 100644\n--- a/sympy/core/basic.py\n+++ b/sympy/core/basic.py\n@@ -1,6 +1,9 @@\n \"\"\"Base class for all the objects in SymPy\"\"\"\n from __future__ import print_function, division\n-from collections import Mapping\n+try:\n+    from collections.abc import Mapping\n+except ImportError:\n+    from collections import Mapping\n \n from .assumptions import BasicMeta, ManagedProperties\n from .cache import cacheit\ndiff --git a/sympy/plotting/plot.py b/sympy/plotting/plot.py\nindex b1ead153ef..e9a6aadc73 100644\n--- a/sympy/plotting/plot.py\n+++ b/sympy/plotting/plot.py\n@@ -25,7 +25,10 @@\n from __future__ import print_function, division\n \n import inspect\n-from collections import Callable\n+try:\n+    from collections.abc import Callable\n+except ImportError:\n+    from collections import Callable\n import warnings\n import sys\n \ndiff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7b59..71eda1fecb 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -231,6 +231,20 @@ def _print_Symbol(self, expr):\n         else:\n             return name\n \n+    def _print_Relational(self, expr):\n+        lhs_code = self._print(expr.lhs)\n+        rhs_code = self._print(expr.rhs)\n+        op = expr.rel_op\n+        return (\"{0} {1} {2}\").format(lhs_code, op, rhs_code)\n+\n+    def _print_sinc(self, expr):\n+        from sympy.functions.elementary.trigonometric import sin\n+        from sympy.core.relational import Ne\n+        from sympy.functions import Piecewise\n+        _piecewise = Piecewise(\n+            (sin(expr.args[0]) / expr.args[0], Ne(expr.args[0], 0)), (1, True))\n+        return self._print(_piecewise)\n+\n     def _print_AugmentedAssignment(self, expr):\n         lhs_code = self._print(expr.lhs)\n         op = expr.rel_op\n",
+  "notes": "",
+  "time_spent_minutes": 25,
+  "difficulty_rating": "easy",
+  "success_rating": "success"
+}

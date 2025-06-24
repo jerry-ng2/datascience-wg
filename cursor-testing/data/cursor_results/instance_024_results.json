@@ -1,0 +1,15 @@
+{
+  "instance_id": "django__django-11848",
+  "instance_idx": 24,
+  "repo": "django/django",
+  "status": "completed",
+  "cursor_response": "",
+  "files_modified": [
+    "django/utils/http.py"
+  ],
+  "git_diff": "diff --git a/django/utils/http.py b/django/utils/http.py\nindex 572cfb4347..89f9ada8f9 100644\n--- a/django/utils/http.py\n+++ b/django/utils/http.py\n@@ -176,10 +176,23 @@ def parse_http_date(date):\n     try:\n         year = int(m.group('year'))\n         if year < 100:\n-            if year < 70:\n-                year += 2000\n+            if regex == RFC850_DATE:\n+                # RFC 7231 compliance: For RFC 850 format with 2-digit years,\n+                # interpret year relative to current year. Years that appear to be\n+                # more than 50 years in the future are interpreted as representing\n+                # the most recent year in the past that had the same last two digits.\n+                current_year = datetime.datetime.utcnow().year\n+                current_century = current_year - (current_year % 100)\n+                if year - (current_year % 100) > 50:\n+                    year += current_century - 100\n+                else:\n+                    year += current_century\n             else:\n-                year += 1900\n+                # For other formats, use the original logic\n+                if year < 70:\n+                    year += 2000\n+                else:\n+                    year += 1900\n         month = MONTHS.index(m.group('mon').lower()) + 1\n         day = int(m.group('day'))\n         hour = int(m.group('hour'))\n",
+  "notes": "",
+  "time_spent_minutes": 15,
+  "difficulty_rating": "medium",
+  "success_rating": "success"
+}

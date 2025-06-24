@@ -1,0 +1,15 @@
+{
+  "instance_id": "sphinx-doc__sphinx-10325",
+  "instance_idx": 207,
+  "repo": "sphinx-doc/sphinx",
+  "status": "completed",
+  "cursor_response": "",
+  "files_modified": [
+    "sphinx/ext/autodoc/__init__.py"
+  ],
+  "git_diff": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 62631f7ff..3337bca51 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -110,11 +110,12 @@ def exclude_members_option(arg: Any) -> Union[object, Set[str]]:\n \n \n def inherited_members_option(arg: Any) -> Union[object, Set[str]]:\n-    \"\"\"Used to convert the :members: option to auto directives.\"\"\"\n+    \"\"\"Used to convert the :inherited-members: option to auto directives.\"\"\"\n     if arg in (None, True):\n         return 'object'\n     else:\n-        return arg\n+        # Support comma-separated list of class names like exclude-members\n+        return {x.strip() for x in arg.split(',') if x.strip()}\n \n \n def member_order_option(arg: Any) -> Optional[str]:\n@@ -682,10 +683,20 @@ class Documenter:\n         def is_filtered_inherited_member(name: str, obj: Any) -> bool:\n             if inspect.isclass(self.object):\n                 for cls in self.object.__mro__:\n-                    if cls.__name__ == self.options.inherited_members and cls != self.object:\n-                        # given member is a member of specified *super class*\n-                        return True\n-                    elif name in cls.__dict__:\n+                    # Check if this class should be filtered based on inherited_members option\n+                    if isinstance(self.options.inherited_members, set):\n+                        # New behavior: check if class name is in the set\n+                        if cls.__name__ in self.options.inherited_members and cls != self.object:\n+                            # given member is a member of one of the specified *super classes*\n+                            return True\n+                    else:\n+                        # Backward compatibility: single class name\n+                        if cls.__name__ == self.options.inherited_members and cls != self.object:\n+                            # given member is a member of specified *super class*\n+                            return True\n+                    \n+                    # Continue with the existing logic for finding where the member is defined\n+                    if name in cls.__dict__:\n                         return False\n                     elif name in self.get_attr(cls, '__annotations__', {}):\n                         return False\n",
+  "notes": "",
+  "time_spent_minutes": 15,
+  "difficulty_rating": "medium",
+  "success_rating": "success"
+}

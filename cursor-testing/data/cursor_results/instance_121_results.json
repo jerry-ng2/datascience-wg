@@ -1,0 +1,13 @@
+{
+  "instance_id": "matplotlib__matplotlib-22711",
+  "instance_idx": 121,
+  "repo": "matplotlib/matplotlib",
+  "status": "completed",
+  "cursor_response": "",
+  "files_modified": [],
+  "git_diff": "",
+  "notes": "Says no action required. Feature is already implemented",
+  "time_spent_minutes": 0,
+  "difficulty_rating": "easy",
+  "success_rating": ""
+}
