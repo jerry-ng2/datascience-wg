@@ -37,7 +37,7 @@ python cursor_swebench_tester.py --mode setup
 ```
 
 This will:
-- Clone repositories to `cursor_workspace/`
+- Clone repositories to `data/cursor_workspace/`
 - Checkout the correct commits
 - Save metadata for each instance
 
@@ -121,9 +121,7 @@ cursor_results/                   # Results and data
 ├── cursor_prompts.md            # Prompts for each instance
 ├── instance_001_results.json    # Individual results
 ├── instance_002_results.json
-├── cursor_predictions.json      # Final predictions for evaluation
-├── summary.json                 # Results summary
-└── cursor_workflow_guide.md     # Detailed workflow guide
+└── cursor_predictions.json      # Final predictions for evaluation
 ```
 
 ## Example Workflow
