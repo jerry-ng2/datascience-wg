@@ -17,7 +17,7 @@ SWE-bench-lite contains 300 real-world GitHub issues from popular Python reposit
 
 ```bash
 # Install dependencies
-pip install datasets
+pip install -r requirements.txt
 
 # Ensure git is available
 git --version
