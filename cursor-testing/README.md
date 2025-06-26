@@ -22,6 +22,9 @@ pip install -r requirements.txt
 # Ensure git is available
 git --version
 
+# Ensure Docker is available
+docker --version
+
 # Make sure you're in the SWE-bench directory
 cd /path/to/cursor-testing
 ```
