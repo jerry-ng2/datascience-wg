@@ -4,7 +4,7 @@ This repository provides scripts to systematically test Cursor's coding capabili
 
 ## Overview
 
-SWE-bench-lite contains 300 real-world GitHub issues from popular Python repositories. This testing framework helps you:
+[SWE-bench-lite](https://github.com/SWE-bench/SWE-bench) contains 300 real-world GitHub issues from popular Python repositories. This testing framework helps you:
 
 1. **Setup repositories** at the correct commits
 2. **Generate standardized prompts** for Cursor
@@ -16,6 +16,9 @@ SWE-bench-lite contains 300 real-world GitHub issues from popular Python reposit
 ### 1. Prerequisites
 
 ```bash
+# Create Python virtual environment that is Python 3.8 or greater
+python3 -m venv venv
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -29,11 +32,19 @@ docker --version
 cd /path/to/cursor-testing
 ```
 
+### Models used in testing
+- Claude-4-Sonnet
+- Gemini-2.5-Pro-Preview-06-05
+- GPT-4.1
+- Cursor Auto Mode 
+
 ### 2. Setup Repositories (One-time)
 
 ```bash
 # Setup first 10 instances for testing
-python cursor_swebench_tester.py --mode setup --start 0 --end 10
+python cursor_swebench_tester.py --mode setup \
+   --start 0 \
+   --end 10
 
 # Or setup all 300 instances (requires ~10GB disk space)
 python cursor_swebench_tester.py --mode setup
@@ -47,7 +58,9 @@ This will:
 ### 3. Generate Prompts
 
 ```bash
-python cursor_swebench_tester.py --mode prompt --start 0 --end 10
+python cursor_swebench_tester.py --mode prompt \
+   --start 0 \
+   --end 10
 ```
 
 This creates:
@@ -60,7 +73,7 @@ For each instance:
 
 1. **Open repository in Cursor**:
    ```bash
-   cursor data/cursor_workspace/instance_001_repo_name/
+   cursor data/cursor_workspace/<instance_repo_name>/
    ```
 
 2. **Use the prompt**:
@@ -76,11 +89,51 @@ For each instance:
 4. **Capture results**:
    ```bash
    # For successful completion
-   python capture_cursor_results.py --instance 1 --status completed --time 15 --difficulty medium --success success
+   python capture_cursor_results.py --instance 1 \
+      --status completed \
+      --time 15 \
+      --difficulty medium \
+      --success success
 
    # For failed attempts
-   python capture_cursor_results.py --instance 1 --status failed --notes "Issue too complex for current approach"
+   python capture_cursor_results.py --instance 1 /
+      --status failed /
+      --notes "Issue too complex for current approach"
    ```
+5. **Usage**:
+   ```bash
+   python capture_cursor_results --instance <instance_id> \
+      --status <completion> \
+      --time <time> \
+      --difficulty <difficulty> \
+      --success <success or fail>
+      # use --instance to capture specific instance 
+      # use --status to indicate completion of instance (completed, partial, failed, skipped)
+      # use --time to measure generation time in minutes
+      # use --difficulty for difficulty of instance (easy, medium, hard)
+      # use --success 
+   ```
+
+6. **Success vs Failure**
+
+<div align="center">
+      <table>
+      <tr>
+         <td align="center">
+            <strong>Success</strong><br/>
+            <img src="docs/assets/success.png" height="360"><br/>
+            <em>Able to finish in one prompt</em>
+         </td>
+         <td align="center">
+            <strong>Failure</strong><br/>
+            <img src="docs/assets/success.png" height="360"><br/>
+            <em>Needs to be prompted again or can't find any bugs</em>
+         </td>
+      </tr>
+   </table>
+</div>
+
+
 
 ### 5. Collect Results and Evaluate
 
@@ -94,10 +147,10 @@ python -m swebench.harness.run_evaluation \
     --predictions_path data/cursor_results/cursor_predictions.json \
     --max_workers 4 \
     --run_id cursor_evaluation \
-    # If on MacOS add the following:
-    --namespace ''
 ```
-
+### NOTE
+> If using a MacOS M-series or other ARM-based systems, add `--namespace ''` to the above script.
+> Adding `--namespace ''` builds Docker images locally
 ## Scripts Overview
 
 ### `cursor_swebench_tester.py`
@@ -150,7 +203,7 @@ python capture_cursor_results.py --instance 0 --status completed --time 15 --dif
 python cursor_swebench_tester.py --mode collect
 python -m swebench.harness.run_evaluation \
     --dataset_name princeton-nlp/SWE-bench_Lite \
-    --predictions_path data/cursor_results/cursor_predictions.json \
+    --predictions_path data/cursor_results/cursor_predictions.jsonl \
     --max_workers 4 \
     --run_id cursor_evaluation \
     # For MacOS
@@ -186,15 +239,6 @@ python cursor_swebench_tester.py --mode setup --start 50 --end 100
 python cursor_swebench_tester.py --mode prompt --start 0 --end 25
 python cursor_swebench_tester.py --mode prompt --start 25 --end 50
 ```
-
-### Selective Testing
-```bash
-# Only test specific instance types or repositories
-# Filter by examining data/cursor_results/cursor_prompts.md
-```
-
-### Custom Prompts
-Edit the `_create_cursor_prompt()` method in `cursor_swebench_tester.py` to customize how issues are presented to Cursor.
 
 ## Troubleshooting
 
