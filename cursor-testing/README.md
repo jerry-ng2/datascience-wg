@@ -144,7 +144,7 @@ python cursor_swebench_tester.py --mode collect
 # Run SWE-bench evaluation
 python -m swebench.harness.run_evaluation \
     --dataset_name princeton-nlp/SWE-bench_Lite \
-    --predictions_path data/cursor_results/cursor_predictions.json \
+    --predictions_path data/cursor_results/cursor_predictions.jsonl \
     --max_workers 4 \
     --run_id cursor_evaluation \
 ```
