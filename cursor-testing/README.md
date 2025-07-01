@@ -41,10 +41,15 @@ cd /path/to/cursor-testing
 ### 2. Setup Repositories (One-time)
 
 ```bash
-# Setup first 10 instances for testing
+# Setup first instance for testing
 python cursor_swebench_tester.py --mode setup \
    --start 0 \
-   --end 10
+   --end 1
+
+# Optional: Setup 10 instances
+python cursor_swebench_tester.py --mode setup\
+   --start 0 \
+   --end 1
 
 # Or setup all 300 instances (requires ~10GB disk space)
 python cursor_swebench_tester.py --mode setup
@@ -60,7 +65,7 @@ This will:
 ```bash
 python cursor_swebench_tester.py --mode prompt \
    --start 0 \
-   --end 10
+   --end 1
 ```
 
 This creates:
@@ -68,6 +73,8 @@ This creates:
 - `data/cursor_results/instance_XXX_results.json` - Result templates
 
 ### 4. Test with Cursor
+
+Ensure [Cursor](https://cursor.com/) is installed
 
 For each instance:
 
