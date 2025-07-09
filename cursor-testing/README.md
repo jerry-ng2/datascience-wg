@@ -133,7 +133,7 @@ For each instance:
          </td>
          <td align="center">
             <strong>Failure</strong><br/>
-            <img src="docs/assets/success.png" height="360"><br/>
+            <img src="docs/assets/failed.png" height="360"><br/>
             <em>Needs to be prompted again or can't find any bugs</em>
          </td>
       </tr>
