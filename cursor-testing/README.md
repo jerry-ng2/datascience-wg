@@ -49,7 +49,7 @@ python cursor_swebench_tester.py --mode setup \
 # Optional: Setup 10 instances
 python cursor_swebench_tester.py --mode setup\
    --start 0 \
-   --end 1
+   --end 10
 
 # Or setup all 300 instances (requires ~10GB disk space)
 python cursor_swebench_tester.py --mode setup
@@ -109,7 +109,7 @@ For each instance:
    ```
 5. **Usage**:
    ```bash
-   python capture_cursor_results --instance <instance_id> \
+   python capture_cursor_results.py --instance <instance_id> \
       --status <completion> \
       --time <time> \
       --difficulty <difficulty> \
@@ -232,7 +232,7 @@ The evaluation will generate:
 - **Detailed logs**: Per-instance success/failure information
 - **Test results**: Whether fixes pass the original test suites
 
-Results are saved in `cursor.cursor_evaluation.json`
+Results are saved in [`cursor.cursor_evaluation.json`](data/cursor_evaluation/cursor.cursor_evaluation.json)
 
 ## Advanced Usage
 
