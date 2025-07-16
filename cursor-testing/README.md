@@ -271,3 +271,5 @@ After running evaluation, analyze your results:
 - Compare resolution rates across different types of issues
 - Identify patterns in successful vs. failed attempts
 - Document lessons learned for improving AI coding workflows 
+- I analyzed Cursor's Auto Mode, Claude Sonnet 4, Gemini 2.5 Pro, and GPT-4.1 in my experiments
+- The results of my experiment can be located [here](docs/analysis/cursor_analysis.ipynb)
